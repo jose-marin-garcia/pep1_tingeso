@@ -1,0 +1,67 @@
+#root {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar {
+  position:"fixed";
+  width: "100%";
+  top:0;
+}
+
+.content {
+  padding-top: 64px; /* Ajusta el padding-top para dejar espacio para el Navbar */
+}
+
+.home-container {
+  position: relative;
+  height: 100vh; /* Establece la altura al 100% del viewport */
+  overflow: hidden; /* Evita que el contenido se desborde */
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/autofix.jpg"); /* Ruta relativa a la imagen de fondo */
+  background-size: cover; /* Ajusta el tamaño de la imagen para que cubra todo el contenedor */
+  background-position: center; /* Centra la imagen */
+  opacity: 0.5;
+}
+
+.content {
+  position: relative;
+  z-index: 1; /* Asegura que el contenido esté por encima de la imagen de fondo */
+  padding: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+th {
+  background-color: #f2f2f2;
+}
