@@ -2,6 +2,7 @@ package tingeso_pep_1.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tingeso_pep_1.DataTransferObjects.VehicleDto;
 import tingeso_pep_1.entities.BondEntity;
 import tingeso_pep_1.entities.HistoricEntity;
 import tingeso_pep_1.entities.HistoryRepairsEntity;
@@ -11,6 +12,7 @@ import tingeso_pep_1.repositories.*;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,17 +33,27 @@ public class RegisterService {
     @Autowired
     BondRepository bondRepository;
 
-    public VehicleEntity saveVehicle(VehicleEntity vehiculo, List<Long> reparaciones) {
+    @Autowired
+    MarksRepository markRepository;
+
+    public VehicleEntity saveVehicle(VehicleEntity vehiculo, List<Long> reparaciones, Long idBond) {
+        System.out.println("ID Bond recibido: " + idBond);
         LocalDateTime fechaHora = LocalDateTime.now();
         DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
         String fechaActual = fechaHora.format(formatoFecha);
         String horaActual = fechaHora.format(formatoHora);
 
-
         int sumaReparaciones = calcularSumaReparaciones(vehiculo, reparaciones, horaActual);
 
-        int descuentos = (int) (sumaReparaciones * calcularDescuentos(vehiculo.getTypemotor(), reparaciones.size(), fechaActual, horaActual));
+        int bono = 0;
+
+        if (idBond != null) {
+            bono = bondRepository.findById(idBond).get().getAmount();
+            bondRepository.deleteById(idBond);
+        }
+
+        int descuentos = ((int) (sumaReparaciones * calcularDescuentos(vehiculo.getTypemotor(), reparaciones.size(), fechaActual, horaActual))) + bono;
 
         int recargos = (int) (sumaReparaciones * calculoRecargos(vehiculo.getKilometers(), vehiculo.getType(), fechaHora.getYear()-vehiculo.getYear()));
 
@@ -225,6 +237,64 @@ public class RegisterService {
     }
 
     public BondEntity getBond(Long id_mark) {
-        return bondRepository.findByIdmark(id_mark);
+        if(id_mark == null)
+            return null;
+        System.out.println(bondRepository.findFirstByIdmark(id_mark));
+        return bondRepository.findFirstByIdmark(id_mark);
     }
+
+    public BondEntity addBond(Long idMark, int amount) {
+        return bondRepository.save(new BondEntity(null, idMark, amount));
+    }
+
+    public List<VehicleDto> getVehiclesNotFinished() {
+        List<HistoricEntity> historiales = historicRepository.findAllByEndhourIsNullAndEnddateIsNull();
+        List<VehicleDto> vehicles = new ArrayList<>();
+        for (HistoricEntity h : historiales) {
+            VehicleEntity v = vehicleRepository.findByPatent(h.getPatent());
+            VehicleDto vdto = new VehicleDto(v.getId(),v.getPatent(), markRepository.findById(v.getMark()).get().getMarkName(), v.getModel(), v.getType(), v.getYear(), v.getTypemotor(), v.getNumberseats(), v.getKilometers());
+            vehicles.add(vdto);
+        }
+        return vehicles;
+    }
+
+    public VehicleEntity finishVehicle(String patent) {
+        LocalDateTime fechaHora = LocalDateTime.now();
+        DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
+        String fechaActual = fechaHora.format(formatoFecha);
+        String horaActual = fechaHora.format(formatoHora);
+
+        HistoricEntity historial = historicRepository.findByPatent(patent);
+        historial.setEnddate(fechaActual);
+        historial.setEndhour(horaActual);
+        historicRepository.save(historial);
+        return vehicleRepository.findByPatent(patent);
+    }
+
+    public List<VehicleDto> getVehiclesNotRemoved() {
+        List<HistoricEntity> historiales = historicRepository.findAllByEndhourIsNotNullAndEnddateIsNotNullAndClientdateIsNullAndClienthourIsNull();
+        List<VehicleDto> vehicles = new ArrayList<>();
+        for (HistoricEntity h : historiales) {
+            VehicleEntity v = vehicleRepository.findByPatent(h.getPatent());
+            VehicleDto vdto = new VehicleDto(v.getId(),v.getPatent(), markRepository.findById(v.getMark()).get().getMarkName(), v.getModel(), v.getType(), v.getYear(), v.getTypemotor(), v.getNumberseats(), v.getKilometers());
+            vehicles.add(vdto);
+        }
+        return vehicles;
+    }
+
+    public VehicleEntity removeVehicle(String patent) {
+        LocalDateTime fechaHora = LocalDateTime.now();
+        DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
+        String fechaActual = fechaHora.format(formatoFecha);
+        String horaActual = fechaHora.format(formatoHora);
+
+        HistoricEntity historial = historicRepository.findByPatent(patent);
+        historial.setClientdate(fechaActual);
+        historial.setClienthour(horaActual);
+        historicRepository.save(historial);
+        return vehicleRepository.findByPatent(patent);
+    }
+
 }

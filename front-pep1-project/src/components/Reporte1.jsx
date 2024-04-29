@@ -23,6 +23,9 @@ const VehicleCosts = () => {
                 <thead>
                     <tr>
                         <th>Patente</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Tipo</th>
                         <th>Suma de Reparaciones</th>
                         <th>Recargos</th>
                         <th>Descuentos</th>
@@ -34,6 +37,9 @@ const VehicleCosts = () => {
                     {vehicleCosts.map((cost, index) => (
                         <tr key={index}>
                             <td>{cost.patent}</td>
+                            <td>{cost.marca}</td>
+                            <td>{cost.modelo}</td>
+                            <td>{cost.tipoVehiculo}</td>
                             <td>{cost.sumaReparaciones}</td>
                             <td>{cost.recargos}</td>
                             <td>{cost.descuentos}</td>

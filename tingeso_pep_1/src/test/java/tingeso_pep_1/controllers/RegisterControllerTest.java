@@ -62,6 +62,6 @@ public class RegisterControllerTest {
         mockMvc.perform(get("/register/{id_mark}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id_mark", is(1L)));
+                .andExpect(jsonPath("$.idmark", is(1L)));
     }
 }

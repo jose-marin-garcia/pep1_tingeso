@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class VehicleCostDetailsR1 {
     private String patent;
+    private String marca;
+    private String modelo;
+    private String tipoVehiculo;
     private int montoTotal;
     private int sumaReparaciones;
     private int descuentos;
     private int recargos;
     private int iva;
-
-    // Constructor, getters y setters
 }

@@ -8,14 +8,34 @@ const getRepairs = () => {
     return httpClient.get('/typerepairs/')
 }
 
-const create = (vehicle, reparations) => {
-    const data = { vehicle, reparations };
+const create = (vehicle, reparations, idBond) => {
+    const data = { vehicle, reparations, idBond };
     return httpClient.post('/register/', data);
 }
 
-const update = (vehicle, repairs) => {
-    const data = { vehicle: vehicle, reparations: repairs };
+const update = (vehicle, reparations, idBond) => {
+    const data = { vehicle, reparations, idBond };
     return httpClient.put('/register/', data);
 }
 
-export default { getMarks, getRepairs, create, update };
+const getVehiclesNotFinished = () => {
+    return httpClient.get('/register/vehicles-not-finished/');
+}
+
+const finalizarReparacion = patent => {
+    return httpClient.put(`/register/finish/${patent}`);
+}
+
+const getVehiclesNotRemoved = () => {
+    return httpClient.get('/register/vehicles-not-removed/');
+}
+
+const retirarAuto = patent => {
+    return httpClient.put(`/register/remove/${patent}`);
+}
+
+const getBond = idMark => {
+    return httpClient.get(`/register/bonds/${idMark}`);
+}
+
+export default { getMarks, getRepairs, create, update, getBond, finalizarReparacion, getVehiclesNotFinished, getVehiclesNotRemoved, retirarAuto };

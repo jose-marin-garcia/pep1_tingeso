@@ -13,7 +13,7 @@ const getReport3 = () => {
 }
 
 const getReport4 = () => {
-    return httpClient.get('');
+    return httpClient.get('/reportes/costos-vehiculos-marcas');
 }
 
 export default { getReport1, getReport2, getReport3, getReport4 };

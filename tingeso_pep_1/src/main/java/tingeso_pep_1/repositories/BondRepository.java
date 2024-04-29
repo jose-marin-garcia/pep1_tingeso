@@ -6,5 +6,6 @@ import tingeso_pep_1.entities.BondEntity;
 
 @Repository
 public interface BondRepository extends JpaRepository<BondEntity, Long> {
-    BondEntity findByIdmark(Long idMark);
+
+    BondEntity findFirstByIdmark(Long id);
 }

@@ -26,8 +26,8 @@ public class HistoricEntity {
     private int descuentos;
     private int recargos;
     private int iva;
-    private Date enddate;
-    private Date endhour;
-    private Date clientdate;
-    private Date clienthour;
+    private String enddate;
+    private String endhour;
+    private String clientdate;
+    private String clienthour;
 }

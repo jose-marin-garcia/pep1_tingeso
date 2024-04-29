@@ -3,6 +3,7 @@ package tingeso_pep_1.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tingeso_pep_1.DataTransferObjects.RepairTypeSummaryR2;
+import tingeso_pep_1.DataTransferObjects.RepairTypeSummaryTypeMotorR4;
 import tingeso_pep_1.DataTransferObjects.VehicleCostDetailsR1;
 import tingeso_pep_1.entities.HistoricEntity;
 import tingeso_pep_1.entities.HistoryRepairsEntity;
@@ -13,7 +14,6 @@ import tingeso_pep_1.repositories.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ReportsService {
@@ -32,6 +32,9 @@ public class ReportsService {
 
     @Autowired
     PricesRepository pricesRepository;
+
+    @Autowired
+    MarksRepository markRepository;
     
     public List<VehicleCostDetailsR1>  calculateCostFormulaForVehicles() {
         List<HistoricEntity> historiales = historicRepository.findAll();
@@ -42,6 +45,9 @@ public class ReportsService {
             VehicleCostDetailsR1 details = new VehicleCostDetailsR1();
 
             details.setPatent(historic.getPatent());
+            details.setMarca(markRepository.findById((vehicleRepository.findByPatent(historic.getPatent()).getMark())).get().getMarkName());
+            details.setModelo(vehicleRepository.findByPatent(historic.getPatent()).getModel());
+            details.setTipoVehiculo(vehicleRepository.findByPatent(historic.getPatent()).getType());
             details.setMontoTotal(historic.getMount());
             details.setSumaReparaciones(historic.getSumaReparaciones());
             details.setDescuentos(historic.getDescuentos());
@@ -95,4 +101,42 @@ public class ReportsService {
         return repairTypeSummaryR2List;
     }
 
+    public List<RepairTypeSummaryTypeMotorR4> calculateCostFormulaForVehiclesByMark() {
+        List<TypeRepairsEntity> reparaciones = typeRepairsRepository.findAll();
+        List<RepairTypeSummaryTypeMotorR4> repairTypeSummaryTypeMotorR4List = new ArrayList<>();
+
+        for (TypeRepairsEntity reparacion : reparaciones) {
+            RepairTypeSummaryTypeMotorR4 details = new RepairTypeSummaryTypeMotorR4();
+            details.setTypeRepairName(reparacion.getRepairName());
+
+            List<HistoryRepairsEntity> repairs = historyRepairsRepository.findByIdReparacion(reparacion.getId());
+            for (HistoryRepairsEntity repair : repairs) {
+                HistoricEntity historic = historicRepository.findById(repair.getIdHistorial()).get();
+                VehicleEntity vehicle = vehicleRepository.findByPatent(historic.getPatent());
+                String typeMotor = vehicle.getTypemotor();
+                int cost = pricesRepository.findPriceByIdtyperepairAndMotortype(repair.getIdReparacion(), vehicle.getTypemotor());
+
+                switch (typeMotor) {
+                    case "Gasolina":
+                        details.setGasolineCount(details.getGasolineCount() + 1);
+                        break;
+                    case "Diesel":
+                        details.setDieselCount(details.getDieselCount() + 1);
+                        break;
+                    case "Híbrido":
+                        details.setHybridCount(details.getHybridCount() + 1);
+                        break;
+                    case "Eléctrico":
+                        details.setElectricCount(details.getElectricCount() + 1);
+                        break;
+                }
+                details.setTotalCost(details.getTotalCost() + cost);
+            }
+
+            repairTypeSummaryTypeMotorR4List.add(details);
+        }
+
+        repairTypeSummaryTypeMotorR4List.sort(Comparator.comparing(RepairTypeSummaryTypeMotorR4::getTotalCost).reversed());
+        return repairTypeSummaryTypeMotorR4List;
+    }
 }

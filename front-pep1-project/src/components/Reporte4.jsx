@@ -6,7 +6,7 @@ const ReparacionesResumen = () => {
 
     useEffect(() => {
         reportesService
-            .getReport2()
+            .getReport4()
             .then((reponse) => {
                 console.log("Mostrando resumen de reparaciones.", reponse.data);
                 setReparacionesResumen(reponse.data);
@@ -18,16 +18,15 @@ const ReparacionesResumen = () => {
 
     return (
         <div>
-            <h1>Resumen de Reparaciones por Tipo de Auto (R2)</h1>
+            <h1>Resumen de Reparaciones por Tipo de Motor (R4)</h1>
             <table>
                 <thead>
                     <tr>
                         <th>Nombre de Reparación</th>
-                        <th>Sedan</th>
-                        <th>Hatchback</th>
-                        <th>SUV</th>
-                        <th>Pickup</th>
-                        <th>Furgoneta</th>
+                        <th>Gasolina</th>
+                        <th>Diesel</th>
+                        <th>Híbrido</th>
+                        <th>Eléctrico</th>
                         <th>Monto Total</th>
                     </tr>
                 </thead>
@@ -35,11 +34,10 @@ const ReparacionesResumen = () => {
                     {ReparacionesResumen.map((cost, index) => (
                         <tr key={index}>
                             <td>{cost.typeRepairName}</td>
-                            <td>{cost.sedanCount}</td>
-                            <td>{cost.hatchbackCount}</td>
-                            <td>{cost.suvCount}</td>
-                            <td>{cost.pickupCount}</td>
-                            <td>{cost.furgonetaCount}</td>
+                            <td>{cost.gasolineCount}</td>
+                            <td>{cost.dieselCount}</td>
+                            <td>{cost.hybridCount}</td>
+                            <td>{cost.electricCount}</td>
                             <td>{cost.totalCost}</td>
                         </tr>
                     ))}

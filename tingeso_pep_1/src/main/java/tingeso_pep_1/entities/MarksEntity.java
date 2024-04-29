@@ -18,5 +18,5 @@ public class MarksEntity {
     private Long id;
 
     @Column(unique = true)
-    private String mark_name;
+    private String markName;
 }

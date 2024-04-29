@@ -3,8 +3,11 @@ import './App.css';
 import Home from './components/Home';
 import Navbar from "./components/Navbar";
 import AddEditRegister from './components/AddEditRegister';
+import FinalizarReparacion from './components/FinalizarReparación';
+import RetirarAuto from './components/RetirarAuto';
 import Reporte1 from './components/Reporte1';
 import Reporte2 from './components/Reporte2';
+import Reporte4 from './components/Reporte4';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
@@ -21,8 +24,11 @@ function App() {
               <Route path="/home" element={<Home />} />
               <Route path="/registro" element={<AddEditRegister />} />
               <Route path="/registro/:id" element={<AddEditRegister />} />
+              <Route path="/finalizar" element={<FinalizarReparacion />} />
+              <Route path="/retirar" element={<RetirarAuto />} />
               <Route path="/reporte1" element={<Reporte1 />} />
               <Route path="/reporte2" element={<Reporte2 />} />
+              <Route path="/reporte4" element={<Reporte4 />} />
             </Routes>
           </div>
         </div>

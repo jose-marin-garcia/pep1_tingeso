@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tingeso_pep_1.DataTransferObjects.RepairTypeSummaryR2;
+import tingeso_pep_1.DataTransferObjects.RepairTypeSummaryTypeMotorR4;
 import tingeso_pep_1.DataTransferObjects.VehicleCostDetailsR1;
 import tingeso_pep_1.services.ReportsService;
 
@@ -28,5 +29,12 @@ public class ReportsController {
     @GetMapping("/reparaciones-resumen")
     public ResponseEntity<List<RepairTypeSummaryR2>> getVehicleCostsSummary() {
         return ResponseEntity.ok(reportsService.calculateVehicleCostsSummary());
+    }
+
+
+
+    @GetMapping("/costos-vehiculos-marcas")
+    public ResponseEntity<List<RepairTypeSummaryTypeMotorR4>> getVehicleCostsByMark() {
+        return ResponseEntity.ok(reportsService.calculateCostFormulaForVehiclesByMark());
     }
 }

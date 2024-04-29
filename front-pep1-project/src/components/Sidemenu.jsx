@@ -10,6 +10,9 @@ import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import PaidIcon from "@mui/icons-material/Paid";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
+import DoneIcon from '@mui/icons-material/Done';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import CarRepairIcon from '@mui/icons-material/CarRepair';
 import DiscountIcon from "@mui/icons-material/Discount";
 import HailIcon from "@mui/icons-material/Hail";
 import MedicationLiquidIcon from "@mui/icons-material/MedicationLiquid";
@@ -37,23 +40,39 @@ export default function Sidemenu({ open, toggleDrawer }) {
 
         <ListItemButton onClick={() => navigate("/registro")}>
           <ListItemIcon>
-            <PeopleAltIcon />
+            <CarRepairIcon />
           </ListItemIcon>
           <ListItemText primary="Nuevo registro" />
         </ListItemButton>
+
+        <ListItemButton onClick={() => navigate("/finalizar")}>
+          <ListItemIcon>
+            <DoneIcon />
+          </ListItemIcon>
+          <ListItemText primary="Finalizar reparación" />
+        </ListItemButton>
+
+        <ListItemButton onClick={() => navigate("/retirar")}>
+          <ListItemIcon>
+            <DoneAllIcon />
+          </ListItemIcon>
+          <ListItemText primary="Retirar auto" />
+        </ListItemButton>
+
+        <Divider />
 
         <ListItemButton onClick={() => navigate("/reporte1")}>
           <ListItemIcon>
             <MoreTimeIcon />
           </ListItemIcon>
-          <ListItemText primary="Registro 1" />
+          <ListItemText primary="Reporte 1" />
         </ListItemButton>
 
         <ListItemButton onClick={() => navigate("/reporte2")}>
           <ListItemIcon>
             <PaidIcon />
           </ListItemIcon>
-          <ListItemText primary="Registro 2" />
+          <ListItemText primary="Reporte 2" />
         </ListItemButton>
 
         <ListItemButton onClick={() => navigate("/paycheck/calculate")}>
@@ -62,11 +81,12 @@ export default function Sidemenu({ open, toggleDrawer }) {
           </ListItemIcon>
           <ListItemText primary="R3" />
         </ListItemButton>
-        <ListItemButton onClick={() => navigate("/reports/AnualReport")}>
+
+        <ListItemButton onClick={() => navigate("/reporte4")}>
           <ListItemIcon>
             <AnalyticsIcon />
           </ListItemIcon>
-          <ListItemText primary="R4" />
+          <ListItemText primary="Reporte 4" />
         </ListItemButton>
       </List>
     </Box>

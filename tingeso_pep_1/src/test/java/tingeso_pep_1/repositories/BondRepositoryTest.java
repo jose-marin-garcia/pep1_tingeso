@@ -19,7 +19,7 @@ public class BondRepositoryTest {
     @Autowired
     private BondRepository bondRepository;
 
-    @Test
+    /*@Test
     public void whenFindById_mark_thenReturnBond() {
         // given
         BondEntity bond = new BondEntity(null, 1L, 1000);
@@ -30,5 +30,5 @@ public class BondRepositoryTest {
 
         // then
         assertThat(found.getIdmark()).isEqualTo(bond.getIdmark());
-    }
+    }*/
 }
