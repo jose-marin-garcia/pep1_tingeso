@@ -2,15 +2,15 @@ package tingeso_pep_1.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tingeso_pep_1.DataTransferObjects.AverageTimeR3;
 import tingeso_pep_1.DataTransferObjects.RepairTypeSummaryR2;
 import tingeso_pep_1.DataTransferObjects.RepairTypeSummaryTypeMotorR4;
 import tingeso_pep_1.DataTransferObjects.VehicleCostDetailsR1;
-import tingeso_pep_1.entities.HistoricEntity;
-import tingeso_pep_1.entities.HistoryRepairsEntity;
-import tingeso_pep_1.entities.TypeRepairsEntity;
-import tingeso_pep_1.entities.VehicleEntity;
+import tingeso_pep_1.entities.*;
 import tingeso_pep_1.repositories.*;
 
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -99,6 +99,75 @@ public class ReportsService {
 
         repairTypeSummaryR2List.sort(Comparator.comparing(RepairTypeSummaryR2::getTotalCost).reversed());
         return repairTypeSummaryR2List;
+    }
+
+    public List<AverageTimeR3> calculateAverageTimeForVehiclesByMark(){
+        List<MarksEntity> marcas = markRepository.findAll();
+        List<AverageTimeR3> averageTimeR3List = new ArrayList<>();
+        // Historiales con reparaciones terminadas para poder calcular el tiempo promedio
+        List<HistoricEntity> historicFinished = historicRepository.findAllByEndhourIsNotNullAndEnddateIsNotNull();
+        for (MarksEntity marca : marcas){
+            System.out.println(marca.getMarkName());
+            AverageTimeR3 details = new AverageTimeR3();
+            details.setMark(marca.getMarkName());
+            List<VehicleEntity> vehiclesByMark = vehicleRepository.findByMark(marca.getId());
+            double average = 0;
+            int numVehicles = 1;
+            for (VehicleEntity vehicle : vehiclesByMark){
+                System.out.println(vehicle);
+                HistoricEntity historial = historicRepository.findByPatent(vehicle.getPatent());
+                System.out.println(historial);
+                if(historial.getEnddate() != null && historial.getEndhour() != null){
+                    String admissionDate = historial.getAdmissiondate();
+                    String admissionHour = historial.getAdmissionhour();
+                    String endDate = historial.getEnddate();
+                    String endHour = historial.getEndhour();
+                    long duration = calculateDurationInSeconds(admissionHour, admissionDate, endHour, endDate);
+                    average = (average + duration) / numVehicles;
+                    numVehicles += 1;
+                }
+            }
+            String averageToHMS = secondsToHHMMSS(average);
+            details.setAverageTime(averageToHMS);
+            averageTimeR3List.add(details);
+        }
+        averageTimeR3List.sort(Comparator.comparing(AverageTimeR3::getAverageTime).reversed());
+        return averageTimeR3List;
+    }
+
+    public long calculateDurationInSeconds(String startHour, String startDate, String endHour, String endDate) {
+        long startSeconds = convertToSeconds(startDate, startHour);
+        long endSeconds = convertToSeconds(endDate, endHour);
+        return endSeconds - startSeconds;  // Duración en segundos
+    }
+
+    public long convertToSeconds(String dma, String hms) {
+        // Asumiendo que la fecha está en formato "dd/MM/yyyy"
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate date = LocalDate.parse(dma, dateFormatter);
+
+        // Asumiendo que la hora está en formato "HH:mm:ss"
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime time = LocalTime.parse(hms, timeFormatter);
+
+        // Combinar fecha y hora en un objeto LocalDateTime
+        LocalDateTime dateTime = LocalDateTime.of(date, time);
+
+        // Convertir LocalDateTime a ZonedDateTime usando la zona horaria del sistema
+        ZonedDateTime zonedDateTime = dateTime.atZone(ZoneId.systemDefault());
+
+        // Convertir ZonedDateTime a segundos desde la época Unix (1 de enero de 1970)
+        return zonedDateTime.toEpochSecond();
+    }
+
+    public String secondsToHHMMSS(double seconds) {
+        int hours = (int) seconds / 3600;
+        int remainder = (int) seconds - hours * 3600;
+        int mins = remainder / 60;
+        remainder = remainder - mins * 60;
+        int secs = remainder;
+
+        return String.format("%d:%02d:%02d", hours, mins, secs);
     }
 
     public List<RepairTypeSummaryTypeMotorR4> calculateCostFormulaForVehiclesByMark() {

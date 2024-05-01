@@ -12,4 +12,5 @@ public interface VehicleRepository extends JpaRepository<VehicleEntity, Long> {
 
     public VehicleEntity findByPatent(String patent);
 
+    List<VehicleEntity> findByMark(Long id);
 }

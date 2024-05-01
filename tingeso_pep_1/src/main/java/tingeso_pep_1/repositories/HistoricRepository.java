@@ -14,4 +14,6 @@ public interface HistoricRepository extends JpaRepository<HistoricEntity, Long> 
     List<HistoricEntity> findAllByEndhourIsNullAndEnddateIsNull();
 
     List<HistoricEntity> findAllByEndhourIsNotNullAndEnddateIsNotNullAndClientdateIsNullAndClienthourIsNull();
+
+    List<HistoricEntity> findAllByEndhourIsNotNullAndEnddateIsNotNull();
 }

@@ -116,7 +116,7 @@ public class RegisterService {
         return descuento;
     }
 
-    private double calculateDiscountForGasoline(int totalRepairs) {
+    public double calculateDiscountForGasoline(int totalRepairs) {
         if (totalRepairs >= 1 && totalRepairs <= 2) {
             return 0.05;
         } else if (totalRepairs >= 3 && totalRepairs <= 5) {
@@ -129,7 +129,7 @@ public class RegisterService {
         return 0.0;
     }
 
-    private double calculateDiscountForDiesel(int totalRepairs) {
+    public double calculateDiscountForDiesel(int totalRepairs) {
         if (totalRepairs >= 1 && totalRepairs <= 2) {
             return 0.07;
         } else if (totalRepairs >= 3 && totalRepairs <= 5) {
@@ -142,7 +142,7 @@ public class RegisterService {
         return 0.0;
     }
 
-    private double calculateDiscountForHibrid(int totalRepairs) {
+    public double calculateDiscountForHibrid(int totalRepairs) {
         if (totalRepairs >= 1 && totalRepairs <= 2) {
             return 0.10;
         } else if (totalRepairs >= 3 && totalRepairs <= 5) {
@@ -155,7 +155,7 @@ public class RegisterService {
         return 0.0;
     }
 
-    private double calculateDiscountForHybridElectric(int totalRepairs) {
+    public double calculateDiscountForHybridElectric(int totalRepairs) {
         if (totalRepairs >= 1 && totalRepairs <= 2) {
             return 0.08;
         } else if (totalRepairs >= 3 && totalRepairs <= 5) {
@@ -193,7 +193,7 @@ public class RegisterService {
         return calcularRecargoPorKilometraje(kilometers,type) + calcularRecargoPorAntiguedad(antiguedad,type);
     }
 
-    private double calcularRecargoPorKilometraje(int kilometraje, String tipoAuto) {
+    public double calcularRecargoPorKilometraje(int kilometraje, String tipoAuto) {
 
         return switch (tipoAuto) {
             case "Sedan", "Hatchback" -> calcularRecargoPorTipo(kilometraje, 0.03, 0.07);
@@ -202,7 +202,7 @@ public class RegisterService {
         };
     }
 
-    private double calcularRecargoPorTipo(int kilometraje, double recargo1, double recargo2) {
+    public double calcularRecargoPorTipo(int kilometraje, double recargo1, double recargo2) {
         if (kilometraje <= 5000) {
             return 0;
         } else if (kilometraje <= 12000) {
@@ -216,7 +216,7 @@ public class RegisterService {
         }
     }
 
-    private double calcularRecargoPorAntiguedad(int antiguedad, String tipoAuto) {
+    public double calcularRecargoPorAntiguedad(int antiguedad, String tipoAuto) {
         return switch (tipoAuto) {
             case "Sedan", "Hatchback" -> calcularRecargoPorTipoAntiguedad(antiguedad, 0.05, 0.09, 0.15);
             case "SUV", "Pickup", "Furgoneta" -> calcularRecargoPorTipoAntiguedad(antiguedad, 0.07, 0.11, 0.20);
@@ -224,7 +224,7 @@ public class RegisterService {
         };
     }
 
-    private double calcularRecargoPorTipoAntiguedad(int antiguedad , double recargo1, double recargo2, double recargo3) {
+    public double calcularRecargoPorTipoAntiguedad(int antiguedad , double recargo1, double recargo2, double recargo3) {
         if (antiguedad <= 5) {
             return 0;
         } else if (antiguedad <= 10) {
@@ -239,7 +239,6 @@ public class RegisterService {
     public BondEntity getBond(Long id_mark) {
         if(id_mark == null)
             return null;
-        System.out.println(bondRepository.findFirstByIdmark(id_mark));
         return bondRepository.findFirstByIdmark(id_mark);
     }
 

@@ -43,14 +43,6 @@ public class RegisterController {
         return ResponseEntity.ok(vehicleNew);
     }
 
-/*
-    @PutMapping("/")
-    public ResponseEntity<VehicleEntity> updateVehicle(@RequestBody RegisterDto vehicleDto){
-        VehicleEntity vehicleNew = registerService.updateRegister(vehicleDto.getVehicle(), vehicleDto.getReparations(), vehicleDto.getIdBond());
-        return ResponseEntity.ok(vehicleNew);
-    }
-*/
-
     @GetMapping("/vehicles-not-finished/")
     public ResponseEntity<List<VehicleDto>> getVehiclesNotFinished(){
         List<VehicleDto> vehicles = registerService.getVehiclesNotFinished();
