@@ -63,6 +63,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>tingeso1-backend</finalName>
 	</build>
 
 </project>

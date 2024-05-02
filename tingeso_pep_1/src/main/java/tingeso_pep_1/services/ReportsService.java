@@ -56,6 +56,7 @@ public class ReportsService {
 
             vehicleCostDetailsR1List.add(details);
         }
+        System.out.println(vehicleCostDetailsR1List);
         return vehicleCostDetailsR1List;
     }
 
@@ -142,6 +143,9 @@ public class ReportsService {
     }
 
     public long convertToSeconds(String dma, String hms) {
+        if (dma == null || dma.isEmpty() || hms == null || hms.isEmpty()) {
+            throw new IllegalArgumentException("Fecha o hora no pueden estar vacías");
+        }
         // Asumiendo que la fecha está en formato "dd/MM/yyyy"
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate date = LocalDate.parse(dma, dateFormatter);

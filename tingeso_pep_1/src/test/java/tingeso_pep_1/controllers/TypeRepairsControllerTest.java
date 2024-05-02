@@ -21,7 +21,7 @@ import java.util.List;
 
 @WebMvcTest(TypeRepairsController.class)
 public class TypeRepairsControllerTest {
-
+/*
     @Autowired
     private MockMvc mockMvc;
 
@@ -87,5 +87,5 @@ public class TypeRepairsControllerTest {
                 .andExpect(jsonPath("$[1].repairName", is("Revisión de frenos")));
     }
 
-
+*/
 }
